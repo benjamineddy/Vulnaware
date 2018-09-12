@@ -1,0 +1,176 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="page-wrapper">
+    <br />
+    <h2>Database Statistics</h2>
+    <br />
+    <!-- Statistics -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="huge" style="text-align:center">
+                            Vulnerabilities From The Last 7 Days
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="huge" style="text-align:center">
+                        @ViewBag.ThisWeeksVulnerabilityCount
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="huge" style="text-align:center">
+                            This Month's Vulnerabilities
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="huge" style="text-align:center">
+                        @ViewBag.ThisMonthsVulnerabilityCount
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="huge" style="text-align:center">
+                            This Year's Vulnerabilities
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="huge" style="text-align:center">
+                        @ViewBag.ThisYearsVulnerabilityCount
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="huge" style="text-align:center">
+                            All Time Vulnerabilities
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="huge" style="text-align:center">
+                        @ViewBag.TotalVulnerabilityCount
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Statistics morris tables -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Yearly Vulnerability Counts
+                </div>
+                <div class="panel-body">
+                    <div id="barChart-yearTotals"></div>
+                    <div id="yeartotals-loading" align="center">
+                        <img src="~/images/loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Yearly Average Base Scores
+                </div>
+                <div class="panel-body">
+                    <div id="barChart-yearBaseScores"></div>
+                    <div id="yearsbasescore-loading" align="center">
+                        <img src="~/images/loader-big.gif" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section scripts {
+        <script>
+            $(document).ready(function () {
+                Morris.Bar({
+                    element: 'barChart-yearTotals',
+                    data: YearlyTotalGraph(),
+                    xkey: 'x',
+                    ykeys: ['item'],
+                    labels: ['Total Vulnerabilities'],
+                    hideHover: true,
+                    resize: true
+                });
+
+                Morris.Bar({
+                    element: 'barChart-yearBaseScores',
+                    data: YearyBaseScoreAverageGraph(),
+                    xkey: 'x',
+                    ykeys: ['item'],
+                    labels: ['Year&#39;s Average Base Score'],
+                    hideHover: true,
+                    resize: true
+                });
+            });
+        </script>
+        <script>
+            function YearlyTotalGraph() {
+                var data = "";
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("LoadYearlyCountTable")',
+                    dataType: 'json',
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        data = result;
+                        document.getElementById("yeartotals-loading").remove();
+                    },
+                    error: function (xhr, status, error) {
+                        alert(error);
+                    }
+                });
+
+                return data;
+            }
+        </script>
+        <script>
+            function YearyBaseScoreAverageGraph() {
+                var data = "";
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("LoadYearlyBaseScoreAverageTable")',
+                    dataType: 'json',
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        data = result;
+                        document.getElementById("yearsbasescore-loading").remove();
+                    },
+                    error: function (xhr, status, error) {
+                        alert(error);
+                    }
+                });
+
+                return data;
+            }
+        </script>
+    }
+</div>
+
+

@@ -1,0 +1,240 @@
+﻿@model Vulnaware.Models.VulnawareViewModels.ConfigurationReportingViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="page-wrapper">
+    <br />
+    <h2>Configuration Reporting</h2>
+    <p>Use this page to search and filter across all your configurations.</p>
+    <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            <div class="col-lg-3">
+                <br />
+                <label asp-for="ConfigurationList" class="control-label"></label>
+                <br />
+                <select class="form-control" style="width:50%" asp-for="SelectedItemID">
+                    @foreach (SelectListItem item in Model.ConfigurationList)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                <br />
+                <br />
+            </div>
+            <div class="col-lg-2">
+                <br />
+                <div class="form-group">
+                    <label asp-for="MinScore" class="control-label"></label>
+                    <input class="form-control" style="width:40%" type="number" min="0" max="10" asp-for="MinScore" />
+                    <span asp-validation-for="MinScore" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <br />
+                <div class="form-group">
+                    <label asp-for="MaxScore" class="control-label"></label>
+                    <input class="form-control" style="width:40%" type="number" min="0" max="10" size="4" asp-for="MaxScore" />
+                    <span asp-validation-for="MaxScore" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <br /><br />
+                <div class="form-group row">
+                    <div class="col-lg-2">
+                        <input type="submit" formaction="Index" id="button-submit" value="Search" class="btn btn-primary" onclick="showHide()" />
+                    </div>
+                    <div id="action-search-div" class="col-lg-2">
+                        <img src="~/images/loader.gif" alt="Actioning..." style="display:none" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-lg-2">
+                        <input type="submit" formaction="ExportCsv" id="button-export" value="CSV Export" class="btn btn-primary"/>
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <input type="submit" formaction="ExportPdf" id="button-export" value="PDF Export" class="btn btn-primary" disabled />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    @if (Model.ConfigurationObjectList != null)
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        Existing Configurations
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-configurationReport">
+                            <thead>
+                                <tr>
+                                    <th>Configuration Name</th>
+                                    <th>Vendor</th>
+                                    <th>Product</th>
+                                    <th>Version</th>
+                                    <th>Update</th>
+                                    <th>Edition</th>
+                                    <th>CVE ID</th>
+                                    <th>Date Added</th>
+                                    <th>Base Score</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var configurationItem in Model.ConfigurationObjectList)
+                                {
+                                    @foreach (var groupedUserCveconfigurationItem in configurationItem.UserCveConfigurations.GroupBy(ucc => ucc.ProductID)
+                                           .Select(g => g.First()).ToList())
+                                    {
+                                        @if (Model.MinScore == 0 && Model.MinScore == 0)
+                                        {
+                                            foreach (var userCveConfigurationItem in groupedUserCveconfigurationItem.Product.UserCveConfigurations)
+                                            {
+                                                <tr>
+                                                    <td>@Html.DisplayFor(Model => configurationItem.ConfigurationName)</td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.Vendor)</td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.ProductName)</td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.Version)</td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.ProductUpdate)</td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.Edition)</td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.Cve.GivenID)</td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.DateAdded)</td>
+                                                    <td>
+                                                        @if (userCveConfigurationItem.Cve.BaseScore <= 3)
+                                                        {
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-success" role="progressbar" style="width:25%">
+                                                                    @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        @if (userCveConfigurationItem.Cve.BaseScore > 3
+                                                                  && userCveConfigurationItem.Cve.BaseScore <= 6)
+                                                        {
+                                                            <div class="progress">
+                                                                <div class="progress-bar" role="progressbar" style="width:50%">
+                                                                    @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        @if (userCveConfigurationItem.Cve.BaseScore > 6
+                                                               && userCveConfigurationItem.Cve.BaseScore <= 9)
+                                                        {
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-warning" role="progressbar" style="width:75%">
+                                                                    @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                        @if (userCveConfigurationItem.Cve.BaseScore > 9)
+                                                        {
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-danger" role="progressbar" style="width:100%">
+                                                                    @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                    </td>
+                                                    <td>@Html.DisplayFor(Model => userCveConfigurationItem.Status.StatusName)</td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            foreach (var userCveConfigurationItem in groupedUserCveconfigurationItem.Product.UserCveConfigurations)
+                                            {
+                                                @if (userCveConfigurationItem.Cve.BaseScore >= Model.MinScore
+                                                       && userCveConfigurationItem.Cve.BaseScore <= Model.MaxScore)
+                                                {
+                                                    <tr>
+                                                        <td>@Html.DisplayFor(Model => configurationItem.ConfigurationName)</td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.Vendor)</td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.ProductName)</td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.Version)</td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.ProductUpdate)</td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.Product.Edition)</td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.Cve.GivenID)</td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.DateAdded)</td>
+                                                        <td>
+                                                            @if (userCveConfigurationItem.Cve.BaseScore <= 3)
+                                                            {
+                                                                <div class="progress">
+                                                                    <div class="progress-bar progress-bar-success" role="progressbar" style="width:25%">
+                                                                        @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if (userCveConfigurationItem.Cve.BaseScore > 3
+                                                                   && userCveConfigurationItem.Cve.BaseScore <= 6)
+                                                            {
+                                                                <div class="progress">
+                                                                    <div class="progress-bar" role="progressbar" style="width:50%">
+                                                                        @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            @if (userCveConfigurationItem.Cve.BaseScore > 6
+                                                               && userCveConfigurationItem.Cve.BaseScore <= 9)
+                                                            {
+                                                                <div class="progress">
+                                                                    <div class="progress-bar progress-bar-warning" role="progressbar" style="width:75%">
+                                                                        @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                            @if (userCveConfigurationItem.Cve.BaseScore > 9)
+                                                            {
+                                                                <div class="progress">
+                                                                    <div class="progress-bar progress-bar-danger" role="progressbar" style="width:100%">
+                                                                        @Html.DisplayFor(modelItem => userCveConfigurationItem.Cve.BaseScore)
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                        </td>
+                                                        <td>@Html.DisplayFor(Model => userCveConfigurationItem.Status.StatusName)</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                    <div id="action-configuration-div" style="display:none">
+                        <img style="display:block; margin-left:auto; margin-right:auto" src="~/images/loader.gif" alt="Actioning..." />
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    }
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+                $('#dataTables-configurationReport').DataTable({
+                    rensponsive: true
+                });
+            });
+        </script>
+        <script type="text/javascript">
+            function showHide() {
+                //create an object reference to the div containing images
+                var oimageDiv = document.getElementById('action-search-div')
+                //set display to inline if currently none, otherwise to none
+                oimageDiv.style.display = (oimageDiv.style.display == 'none') ? 'inline' : 'none'
+            }
+        </script>
+    }
+</div>
+

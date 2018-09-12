@@ -1,0 +1,163 @@
+﻿@model Vulnaware.Models.VulnawareViewModels.NewConfigurationFileViewModel
+@inject UserManager<ApplicationUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="page-wrapper">
+    <br />
+    <h2>Create a new CPE Configuration</h2>
+    <hr />
+    <!-- Upload status -->
+    @if (ViewBag.CsvError != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.CsvError
+        </div>
+    }
+    <div class="row">
+        @if (ViewBag.UploadStatus == null)
+        {
+            <!-- New configuration form -->
+            <div class="col-lg-4">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="ConfigurationName" class="control-label"></label>
+                        <input asp-for="ConfigurationName" class="form-control" />
+                        <span asp-validation-for="ConfigurationName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Notes" class="control-label"></label>
+                        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="ProductFile" type="file" name="ProductFile" />
+                        <span asp-validation-for="ProductFile" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <input type="submit" id="button-submit" value="Create" class="btn btn-default" onclick="showHide()" />
+                        </div>
+                        <div class="col-lg-2">
+                            <div id="save-configuration-div" style="display:none">
+                                <img src="~/images/loader.gif" alt="Saving..." />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </form>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary">Back to configurations</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Import report -->
+            <div class="col-lg-6">
+                <div>
+                    <a asp-action="Index" class="btn btn-primary">Back to configurations</a>
+                </div>
+                <br />
+                @if (ViewBag.UploadStatus == "success")
+                {
+                    <div class="alert alert-success">
+                        Upload successful
+                    </div>
+                }
+                @if (ViewBag.UploadStatus == "partial")
+                {
+                    <div class="alert alert-warning">
+                        Upload partially successful
+                    </div>
+
+                }
+                @if (ViewBag.UploadStatus == "failed")
+                {
+                    <div class="alert alert-danger">
+                        Upload failed
+                    </div>
+                }
+                <h3>Report</h3>
+                <b>Matched products that were added:</b>
+                <br />
+                @foreach (var successItem in ViewBag.SuccessList)
+                {
+                    <font color="green">Uploaded:@successItem</font><br />
+                }
+                <br />
+                <b>Unmatched products that were not added:</b>
+                <br />
+                @foreach (var failedItem in ViewBag.FailedList)
+                {
+                    <font color="red">Failed: @failedItem</font><br />
+                }
+            </div>
+        }
+        <div class="col-lg-2">
+            <!-- Space -->
+        </div>
+        <!-- Instructions and template downloads -->
+        <div class="col-lg-6">
+            <h2>How do I create a configuration?</h2>
+            <p>
+                Use one of the templates below to populate a list of products for upload. You can either use the
+                <b>concatenated template</b> or the <b>separated template</b>. You can only upload a CSV file, all
+                other file types will result in an invalid document error. Finally, do <b>NOT</b> edit the CSV column headers, as
+                doing so will also result in an invalid document error.
+            </p>
+            <br />
+            <h4><b>Concatenated Template</b></h4>
+            <p>
+                This template is used when you have Common Platform Enumeration (CPE) compatible product names such
+                as <b>cpe:2.3:a:microsoft:outlook_express:4.0:*:*:*:*:*:*:*</b>. Once you've downloaded the
+                template you will see where to add the products.
+            </p>
+            <div class="row">
+                <div class="col-lg-3">
+                    <a href="~/templates/Concatenated Template.csv" download>
+                        <img border="0" src="~/images/excel-download.png" alt="excel csv image" height="100" />
+                    </a>
+                </div>
+                <div class="col-lg-9">
+                    <img border="0" src="~/images/concatenated-excel.png" alt="excel csv image" height="100" />
+                </div>
+            </div>
+
+            <br /><br />
+            <h4><b>Separated Template</b></h4>
+            <p>
+                Use the separated template for instances where you don't have the concatenated product strings.
+                Vulnaware will attempt to identify associated products but the error rate is higher where the
+                names don't comply to CPE.
+            </p>
+            <div class="row">
+                <div class="col-lg-3">
+                    <a href="~/templates/Separated Template.csv" download>
+                        <img border="0" src="~/images/excel-download.png" alt="excel csv image" height="100" />
+                    </a>
+                </div>
+                <div class="col-lg-9">
+                    <div class="col-lg-9">
+                        <img border="0" src="~/images/separated-excel.png" alt="excel csv image" height="100" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts {
+        <script type="text/javascript">
+            function showHide() {
+                //create an object reference to the div containing images
+                var oimageDiv = document.getElementById('save-configuration-div')
+                //set display to inline if currently none, otherwise to none
+                oimageDiv.style.display = (oimageDiv.style.display == 'none') ? 'inline' : 'none'
+            }
+        </script>
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+    }
+</div>

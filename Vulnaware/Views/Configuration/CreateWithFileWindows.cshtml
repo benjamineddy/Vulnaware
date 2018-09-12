@@ -1,0 +1,119 @@
+﻿@model Vulnaware.Models.VulnawareViewModels.NewConfigurationFileViewModel
+@inject UserManager<ApplicationUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="page-wrapper">
+    <br />
+    <h2>Create a new Configuration from Windows</h2>
+    <hr />
+    <!-- Upload status -->
+    @if (ViewBag.CsvError != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.CsvError
+        </div>
+    }
+    <div class="row">
+        <!-- New configuration form -->
+        @if (ViewBag.UploadStatus == null)
+        {
+            <div class="col-lg-4">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label asp-for="ConfigurationName" class="control-label"></label>
+                        <input asp-for="ConfigurationName" class="form-control" />
+                        <span asp-validation-for="ConfigurationName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Notes" class="control-label"></label>
+                        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="ProductFile" type="file" name="ProductFile" />
+                        <span asp-validation-for="ProductFile" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2">
+                            <input type="submit" id="button-submit" value="Create" class="btn btn-default" onclick="showHide()" />
+                        </div>
+                        <div class="col-lg-2">
+                            <div id="save-configuration-div" style="display:none">
+                                <img src="~/images/loader.gif" alt="Saving..." />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </form>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary">Back to configurations</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <!-- Import report -->
+            <div class="col-lg-6">
+                <div>
+                    <a asp-action="Index" class="btn btn-primary">Back to configurations</a>
+                </div>
+                <br />
+                @if (ViewBag.UploadStatus == "success")
+                {
+                    <div class="alert alert-success">
+                        Upload successful
+                    </div>
+                }
+                @if (ViewBag.UploadStatus == "partial")
+                {
+                    <div class="alert alert-warning">
+                        Upload partially successful
+                    </div>
+
+                }
+                @if (ViewBag.UploadStatus == "failed")
+                {
+                    <div class="alert alert-danger">
+                        Upload failed
+                    </div>
+                }
+                <h3>Report</h3>
+                <b>Matched products that were added:</b>
+                <br />
+                @foreach (var successItem in ViewBag.SuccessList)
+                {
+                    <font color="green">Uploaded:@successItem</font><br />
+                }
+                <br />
+                <b>Unmatched products that were not added:</b>
+                <br />
+                @foreach (var failedItem in ViewBag.FailedList)
+                {
+                    <font color="red">Failed: @failedItem</font><br />
+                }
+            </div>
+        }
+        <div class="col-lg-2">
+
+        </div>
+        <div class="col-lg-6" style="background-color:aqua">
+            Stuff here on how to do it.
+        </div>
+    </div>
+
+    @section scripts {
+        <script type="text/javascript">
+            function showHide() {
+                //create an object reference to the div containing images
+                var oimageDiv = document.getElementById('save-configuration-div')
+                //set display to inline if currently none, otherwise to none
+                oimageDiv.style.display = (oimageDiv.style.display == 'none') ? 'inline' : 'none'
+            }
+        </script>
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+    }
+</div>

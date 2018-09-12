@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewData["Title"] = "Upload Page";
+    string StatusMessage = ViewBag.StatusMessage;
+}
+<div id="page-wrapper">
+    <br />
+    <h1>Database Management</h1>
+    <div class="row">
+        <!-- File count -->
+        <div class="col-lg-2">
+            <h4>@ViewBag.FileCount file(s) present in the CVE Data folder</h4>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <!-- Initial data import controls -->
+        <div class="col-lg-2">
+            <form method="post" action="/Upload/InitialDataImport">
+                <button type="submit" class="btn btn-primary">Import Initial Database</button>
+            </form>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <!-- Manual update -->
+        <div class="col-lg-2">
+            <a class="btn btn-primary" onclick="StartUpdate()">Update Database</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div id="update-div" style="display:none" align="center">
+            <img src="~/images/loader-big.gif" alt="Saving..." />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <!-- Test update -->
+        <div class="col-lg-6">
+            <form method="post" asp-action="TestUpdate" asp-controller="Upload" enctype="multipart/form-data">
+                <label>Select file for test database update</label>
+                <input type="file" id="testFile" name="testFile" />
+                <br />
+                <input class="btn btn-primary" type="submit" value="Test Update" />
+            </form>
+        </div>
+    </div>
+    @section scripts {
+        <script>
+            function StartUpdate()
+            {
+                $.ajax({
+                    url: '@Url.Action("ImportModifiedCveData")',
+                    type: "POST",
+                    data: { guid: "3777706d-0db3-4a6c-9f34-2cbd672fbd89" },
+                    beforeSend: function () {
+                        //create an object reference to the div containing images
+                        var oimageDiv = document.getElementById('update-div');
+                        //set display to inline if currently none, otherwise to none
+                        oimageDiv.style.display = (oimageDiv.style.display == 'none') ? 'block' : 'none';
+                    },
+                    success: function (data) {
+                        //create an object reference to the div containing images
+                        var oimageDiv = document.getElementById('update-div');
+                        //set display to inline if currently none, otherwise to none
+                        oimageDiv.style.display = (oimageDiv.style.display == 'none') ? 'block' : 'none';
+                        alert("Success");
+                    },
+                    error: function (data) {
+                        alert("Something went wrong, please try again.");
+                    }
+                })
+            }
+        </script>
+    }
+</div>

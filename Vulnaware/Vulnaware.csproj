@@ -1,0 +1,186 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <UserSecretsId>aspnet-Vulnaware-0CAE8A38-314C-429B-9136-BE40EC9BCF31</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\HomeViewModels\**" />
+    <Compile Remove="Models\JsonXml\**" />
+    <Content Remove="Models\HomeViewModels\**" />
+    <Content Remove="Models\JsonXml\**" />
+    <EmbeddedResource Remove="Models\HomeViewModels\**" />
+    <EmbeddedResource Remove="Models\JsonXml\**" />
+    <None Remove="Models\HomeViewModels\**" />
+    <None Remove="Models\JsonXml\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Configuration\ConfigurationDetails.cshtml" />
+    <Content Remove="Views\Configuration\Delete.cshtml" />
+    <Content Remove="Views\Configuration\Edit.cshtml" />
+    <Content Remove="Views\Configuration\TestView.cshtml" />
+    <Content Remove="Views\Configuration\ViewTest.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\CustomProfile.pubxml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\jquery\.bower.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\jquery\dist\jquery.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\jquery\dist\jquery.min.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\jquery\dist\jquery.min.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\jquery\LICENSE.txt" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="bootstrap" Version="4.0.0" />
+    <PackageReference Include="BuildBundlerMinifier" Version="2.6.362" />
+    <PackageReference Include="jQuery" Version="3.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.1" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\lib\bootstrap\dist\css\bootstrap.css">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\bootstrap\dist\js\bootstrap.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\jquery\dist\jquery.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\lib\jquery\dist\jquery.min.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\data\flot-data.js" />
+    <None Include="wwwroot\data\morris-data.js" />
+    <None Include="wwwroot\dist\js\sb-admin-2.js" />
+    <None Include="wwwroot\dist\js\sb-admin-2.min.js" />
+    <None Include="wwwroot\less\mixins.less" />
+    <None Include="wwwroot\less\sb-admin-2.less" />
+    <None Include="wwwroot\less\variables.less" />
+    <None Include="wwwroot\vendor\bootstrap-social\bootstrap-social.less" />
+    <None Include="wwwroot\vendor\bootstrap-social\bootstrap-social.scss" />
+    <None Include="wwwroot\vendor\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <None Include="wwwroot\vendor\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="wwwroot\vendor\bootstrap\js\bootstrap.js" />
+    <None Include="wwwroot\vendor\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\vendor\datatables-plugins\dataTables.bootstrap.js" />
+    <None Include="wwwroot\vendor\datatables-plugins\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\vendor\datatables-responsive\dataTables.responsive.js" />
+    <None Include="wwwroot\vendor\datatables-responsive\dataTables.responsive.scss" />
+    <None Include="wwwroot\vendor\datatables\images\Sorting icons.psd" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.bootstrap4.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.bootstrap4.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.foundation.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.foundation.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.jqueryui.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.jqueryui.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.material.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.material.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.semanticui.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.semanticui.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.uikit.js" />
+    <None Include="wwwroot\vendor\datatables\js\dataTables.uikit.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\jquery.dataTables.js" />
+    <None Include="wwwroot\vendor\datatables\js\jquery.dataTables.min.js" />
+    <None Include="wwwroot\vendor\datatables\js\jquery.js" />
+    <None Include="wwwroot\vendor\flot-tooltip\jquery.flot.tooltip.js" />
+    <None Include="wwwroot\vendor\flot-tooltip\jquery.flot.tooltip.min.js" />
+    <None Include="wwwroot\vendor\flot-tooltip\jquery.flot.tooltip.source.js" />
+    <None Include="wwwroot\vendor\flot\excanvas.js" />
+    <None Include="wwwroot\vendor\flot\excanvas.min.js" />
+    <None Include="wwwroot\vendor\flot\jquery.colorhelpers.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.canvas.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.categories.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.crosshair.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.errorbars.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.fillbetween.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.image.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.navigate.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.pie.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.resize.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.selection.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.stack.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.symbol.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.threshold.js" />
+    <None Include="wwwroot\vendor\flot\jquery.flot.time.js" />
+    <None Include="wwwroot\vendor\flot\jquery.js" />
+    <None Include="wwwroot\vendor\font-awesome\css\font-awesome.css.map" />
+    <None Include="wwwroot\vendor\font-awesome\fonts\fontawesome-webfont.svg" />
+    <None Include="wwwroot\vendor\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <None Include="wwwroot\vendor\font-awesome\less\animated.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\bordered-pulled.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\core.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\extras.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\fixed-width.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\font-awesome.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\icons.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\larger.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\list.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\mixins.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\path.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\rotated-flipped.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\screen-reader.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\spinning.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\stacked.less" />
+    <None Include="wwwroot\vendor\font-awesome\less\variables.less" />
+    <None Include="wwwroot\vendor\font-awesome\scss\font-awesome.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_animated.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_bordered-pulled.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_core.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_extras.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_fixed-width.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_icons.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_larger.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_list.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_mixins.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_path.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_rotated-flipped.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_screen-reader.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_spinning.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_stacked.scss" />
+    <None Include="wwwroot\vendor\font-awesome\scss\_variables.scss" />
+    <None Include="wwwroot\vendor\jquery\jquery.js" />
+    <None Include="wwwroot\vendor\jquery\jquery.min.js" />
+    <None Include="wwwroot\vendor\metisMenu\metisMenu.js" />
+    <None Include="wwwroot\vendor\metisMenu\metisMenu.min.js" />
+    <None Include="wwwroot\vendor\morrisjs\morris.js" />
+    <None Include="wwwroot\vendor\morrisjs\morris.min.js" />
+    <None Include="wwwroot\vendor\raphael\raphael.js" />
+    <None Include="wwwroot\vendor\raphael\raphael.min.js" />
+  </ItemGroup>
+
+</Project>

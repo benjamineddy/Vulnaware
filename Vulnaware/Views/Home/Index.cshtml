@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div id="page-wrapper">
+    <div class="row">
+        <!-- Opening welcome paragraph -->
+        <div class="col-md-6">
+            <h1>Welcome to Vulnaware.co.uk</h1>
+            Vulnaware aims to provide a useful representation of the National Institute for Science and Techology's
+            (NIST) Common Vulnerability and Exposures (CVE) Database. As a guest you can search the database and browse
+            through statistics, but the power of Vulnaware becomes apparent when signing up as a member. Members can
+            access the configuration feature whereby providing a list of software products results in an interactive
+            list of associated vulnerabilities. You can even keep track of all your vulnerabilities by changing their
+            status codes and adding your own notes. Sign up and take a look!
+            <br />
+            <br />
+        </div>
+    </div>
+    <div class="row">
+        <!-- Statistics -->
+        <div class="col-md-8">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    Vulnerability Database
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <p style="text-align:center; font-size:30px">
+                                            Total Vulnerabilities Added To Vulnaware
+                                            <br />
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="huge" style="text-align:center">
+                                        @ViewBag.TotalVulnerabilityCount
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-green">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <p style="text-align:center; font-size:30px">
+                                            Vulnerabilities From The Last 7 Days
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="huge" style="text-align:center">
+                                        @ViewBag.ThisWeeksVulnerabilityCount
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="panel panel-red">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <p style="text-align:center; font-size:30px">
+                                            This Year's Average Threat Base Score
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="huge" style="text-align:center">
+                                        @ViewBag.ThisYearsAverageBaseScore
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-yellow">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <p style="text-align:center; font-size:30px">
+                                            Total Average Base<br />Score
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <div class="huge" style="text-align:center">
+                                        @ViewBag.TotalAverageBaseScore
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Twitter feed -->
+        <div class="col-md-4">
+            <a class="twitter-timeline" data-height="502" data-theme="dark" href="https://twitter.com/Vulnaware_Team?ref_src=twsrc%5Etfw">Tweets by Vulnaware_Team</a>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Vulnerability datatable -->
+        <div class="col-md-12">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    This Week's Vulnerabilities (10 selected at random)*
+                </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-hover" style="width:100%;" id="vulnerabilities">
+                        <thead>
+                            <tr>
+                                <th>CVEID</th>
+                                <th>CVE ID</th>
+                                <th>Base Score</th>
+                                <th>Published Date</th>
+                                <th>Vector</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            *The published date of a vulnerability is the date it is published by the vendor, not when it is added to the NVD.
+        </div>        
+    </div>
+    @section scripts {
+        <script>
+            $(document).ready(function () {
+                $("#vulnerabilities").DataTable({
+                    "scrollX": true,
+                    "ordering": false,
+                    "processing": true,
+                    "serverSide": true,
+                    "filter": false,
+                    "paging": false,
+                    "info": false,
+                    "language": {
+                        "zeroRecords": "No new vulnerabilities this week"
+                    },
+                    "ajax": {
+                        "url": "/Home/GetRecentVulnerabilities",
+                        "type": "POST",
+                        "datatype": "json"
+                    },
+                    "columnDefs":
+                    [
+                        {
+                            "targets": [0],
+                            "visible": false
+                        }
+                    ],
+                    "columns": [
+                        { "data": "cveID", "name": "CveID", "autoWidth": true },
+                        { "data": "givenID", "name": "GivenID", "autoWidth": true },
+                        {
+                            "name": "BaseScore",
+                            "render": function (data, type, full, meta) {
+                                if (full.baseScore <= 3) {
+                                    return '<div class="progress"><div class="progress-bar progress-bar-success" role="progressbar" style="width:25%">' + full.baseScore + '</div></div>';
+                                }
+                                if (full.baseScore > 3 && full.baseScore <= 6) {
+                                    return '<div class="progress"><div class="progress-bar" role="progressbar" style="width:50%">' + full.baseScore + '</div></div>';
+                                }
+                                if (full.baseScore > 6 && full.baseScore <= 9) {
+                                    return '<div class="progress"><div class="progress-bar progress-bar-warning" role="progressbar" style="width:75%">' + full.baseScore + '</div></div>';
+                                }
+                                if (full.baseScore > 9) {
+                                    return '<div class="progress"><div class="progress-bar progress-bar-danger" role="progressbar" style="width:100%">' + full.baseScore + '</div></div>';
+                                }
+                            }
+                        },
+                        { "data": "publishedDate", "name": "PublishedDate", "autoWidth": true },
+                        { "data": "vectorString", "name": "VectorString", "autoWidth": true },
+                        {
+                            "render": function (data, type, full, meta) {
+                                return '<a class="btn btn-info" href="/Vulnerability/Details/' + full.cveID + '">Details</a>';
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
+        <script>
+            function NumberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+        </script>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    }
+</div>

@@ -1,0 +1,24 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+<div id="page-wrapper">
+    <br />
+    <h1 class="text-danger">Error.</h1>
+    <h2 class="text-danger">An error occurred while processing your request.</h2>
+    @if (Model.ShowRequestId)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+    <p>Parameter: @TempData["Param"].</p>
+    <p>Error message: @TempData["Error"].</p>
+    <br />
+    <strong>How do I resolve this error?</strong>
+    <br />
+    The error is probably only temporary so please try again.
+    <br />
+    If you have manipulated the URL to navigate directly to a resource, it might be that the requested resource does not exist.
+</div>
+
